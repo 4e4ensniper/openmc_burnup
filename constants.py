@@ -13,6 +13,7 @@ turnkey_size = 23.4 #sm
 core_barrel_in_r = 339.72/2 #sm
 core_barrel_out_r = 349.88/2 #sm
 b_conc = 4 #g/kg
+ring_number = 10
 #The number of fuel assemblies per row, starting from the bottom of the core map.
 line = [4, 7, 10, 11, 12, 13, 12, 13, 12, 13, 12, 11, 10, 7, 4]
 #Path to the location of files with temperature distributions.

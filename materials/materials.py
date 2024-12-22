@@ -13,7 +13,7 @@ from fuel_assemblies import fa_types, find_name
 sys.path.append('../')
 from constants import core_height, csv_path
 from constants import b_conc, dif_fu_cart
-from constants import numbers, fr_number
+from constants import numbers, fr_number, ring_number
 from constants import r_fr, delta_shell, l_shell, r_fuel, l_g, l_fuel, r_hole
 
 #materials ID definition
@@ -22,7 +22,7 @@ from constants import r_fr, delta_shell, l_shell, r_fuel, l_g, l_fuel, r_hole
 #1??___?? - fuel asssembly number
 #1?????__ - ring in grey rod number (zero in other cases)
 
-def cr_steel(j, num, temp):
+def cr_steel(j, num):
     _08x18h10t = openmc.Material(material_id = int(1E7 + num*1E5 + j * 1E2), name = "08x18h10t")
     _08x18h10t.add_element('Fe', 67.665,'wo')
     _08x18h10t.add_element('Cr', 18.0,'wo')
@@ -36,52 +36,62 @@ def cr_steel(j, num, temp):
     _08x18h10t.add_element('P', 0.035,'wo')
     _08x18h10t.add_element('Cu', 0.3,'wo')
     _08x18h10t.set_density('g/cm3', 7.85)
-    _08x18h10t.temperature = temp
+    #_08x18h10t.temperature = temp
     return _08x18h10t
 
-def cr_helium_(j, num, temp):
+def cr_helium(j, num):
     helium=openmc.Material(material_id = int(1E7 + num * 1E5 + j * 1E2), name = "He")
     helium.add_element('He', 1.0)
-    helium.temperature = temp
+    #helium.temperature = temp
     helium.set_density('g/cm3', 3.24e-3)
     return helium
 
-def cr_uo2_fuel(j, ring, num, temp, enrich):
-    fu = openmc.Material(material_id = int(1E7 + num * 1E5 + j * 1E2 + ring), name = f"UO2_{enrich}")
+def cr_uo2_fuel(j, fr_num, num, temp, enrich, ring):
+    fu = openmc.Material(material_id = int(1E11 + num * 1E9 + j * 1E6 + fr_num * 1E3 + ring), name = f"UO2_{enrich}")
     fu.add_element('U', 1.0, enrichment = enrich, enrichment_type='wo')
     fu.add_element('O', 2.0)
     fu.set_density('g/cm3', 10.48)
     fu.temperature = temp
+    fu.depletable = True
+    fu.volume = pi * (r_fuel * r_fuel - r_hole * r_hole)
     return fu
 
-def cr_uo2_gdo2(j, num, ring, temp, enrich, gdo2_pt):
-    uo2 = cr_uo2_fuel(j, ring, num, temp, enrich)
-    gdo2 = openmc.Material(material_id = int(1E7 + (num + 1) * 1E5 + j*1E2 + ring), name = 'GdO2')
+def cr_uo2_gdo2(j, fr_num, num, ring, temp, enrich, gdo2_pt, square):
+    uo2 = cr_uo2_fuel(j, fr_num, num, temp, enrich, ring)
+    gdo2 = openmc.Material(material_id = int(1E11 + (num + 1) * 1E9 + j*1E6 + fr_num * 1E3 + ring), name = 'GdO2')
     gdo2.add_element('Gd', 2.0)
     gdo2.add_element('O', 3.0)
     gdo2.set_density('g/cm3', 7.407)
     gdo2_uo2 = openmc.Material.mix_materials([uo2, gdo2], [1-gdo2_pt*1E-2, gdo2_pt*1E-2], 'wo')
-    gdo2_uo2.id = int(1E7 + (num + 2) * 1E5 + j * 1E2 + ring)
+    gdo2_uo2.id = int(1E11 + (num + 2) * 1E9 + j * 1E6 + fr_num *1E3 + ring)
     gdo2_uo2.name = 'GdO2_UO2'
     gdo2_uo2.temperature = temp
+    gdo2_uo2.depletable = True
+    gdo2_uo2.volume = square
     return gdo2_uo2
 
 def cr_water(j, num, temp, density, b_conc):
     if b_conc > 0.00001:
         b_ppm = 1/(1 + 61.83/18 * (1/(b_conc*1E-3)-1)) * 1E6
         water = openmc.model.borated_water(boron_ppm = b_ppm, density=density*1E-3)
-        water.id = int(1E5 + num * 1E3 + j)
+        water.id = int(1E7 + num * 1E5 + j*1E2)
         water.temperature = temp + 273.15
         water.name = 'H2O_b'
     else:
-        water = openmc.Material(material_id = int(1E5 + (num+1) * 1E3 + j), name = "H2O")
+        water = openmc.Material(material_id = int(1E7 + (num+1) * 1E5 + j*1E2), name = "H2O")
         water.add_element('H', 2.0)
         water.add_element('O', 1.0)
         water.set_density('g/cm3', density*1E-3)
         water.temperature = temp + 273.15
         water.add_s_alpha_beta('c_H_in_H2O')
     return water
-
+def cr_shell_110(j, num):
+    shell_alloy = openmc.Material(material_id = int(1E7 + num * 1E5 + j*1E2), name = "110")
+    shell_alloy.add_element('Zr', 0.99, percent_type='wo')
+    shell_alloy.add_element('Nb',0.1, percent_type='wo')
+    #shell_alloy.temperature = temp + 273.15
+    shell_alloy.set_density('g/cm3',6.5)
+    return shell_alloy
 file_path = 'burnup_temp.txt'
 hc_density = []
 hc_temperature = []
@@ -98,4 +108,21 @@ with open(file_path, 'r') as file:
         gaz_gap_temperature.append(numbers[3])
         fuel_temperature.append(numbers[4])
         central_gaz_temperature.append(numbers[5])
-
+shell_110 = cr_shell_110(18, 1)
+gaz = cr_helium(18, 2)
+coolant_arr = []
+fuel_uo2_arr = []
+grey_fuel_arr = []
+s_ring = pi * (r_fuel * r_fuel - r_hole * r_hole)/ring_number
+for i in range(0, len(dif_fu_cart)):
+    type = find_name(dif_fu_cart[i], fa_types)
+    coolant = cr_water(i, 3, hc_temperature[i], hc_density[i], b_conc)
+    coolant_arr.append(coolant)
+    for j in range (0, fr_number - len(type["grey_pos"])):
+        fuel_uo2 = cr_uo2_fuel(i, j, 5, fuel_temperature[i], type["enrichment"], ring_number + 1)
+        fuel_uo2_arr.append(fuel_uo2)
+    for j in range (0, len(type["grey_pos"])):
+        for k in range(0, ring_number):
+            grey_fuel = cr_uo2_gdo2(i, j, 6, k, fuel_temperature[i], type["grey_enrichment"], type["gdo2_wo"], s_ring)
+            grey_fuel_arr.append(grey_fuel)
+print("materials created!")
