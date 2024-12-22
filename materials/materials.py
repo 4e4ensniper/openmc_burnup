@@ -17,12 +17,13 @@ from constants import numbers, fr_number
 from constants import r_fr, delta_shell, l_shell, r_fuel, l_g, l_fuel, r_hole
 
 #materials ID definition
-#1????? - first 1
-#1__??? - material number
-#1??___ - fuel asssembly number
+#1??????? - first 1
+#1__????? - material number
+#1??___?? - fuel asssembly number
+#1?????__ - ring in grey rod number (zero in other cases)
 
 def cr_steel(j, num, temp):
-    _08x18h10t = openmc.Material(material_id = int(1E7 + num*1E5 + j), name = "08x18h10t")
+    _08x18h10t = openmc.Material(material_id = int(1E7 + num*1E5 + j * 1E2), name = "08x18h10t")
     _08x18h10t.add_element('Fe', 67.665,'wo')
     _08x18h10t.add_element('Cr', 18.0,'wo')
     _08x18h10t.add_element('Ni', 10.0,'wo')
@@ -39,13 +40,13 @@ def cr_steel(j, num, temp):
     return _08x18h10t
 
 def cr_helium_(j, num, temp):
-    helium=openmc.Material(material_id = int(1E5 + num * 1E3 + j), name = "He")
+    helium=openmc.Material(material_id = int(1E7 + num * 1E5 + j * 1E2), name = "He")
     helium.add_element('He', 1.0)
     helium.temperature = temp
     helium.set_density('g/cm3', 3.24e-3)
     return helium
 
-def cr_uo2_fuel(j, num, temp, enrich):
+def cr_uo2_fuel(j, ring, num, temp, enrich):
     fu = openmc.Material(material_id = int(1E7 + num * 1E5 + j * 1E2 + ring), name = f"UO2_{enrich}")
     fu.add_element('U', 1.0, enrichment = enrich, enrichment_type='wo')
     fu.add_element('O', 2.0)
@@ -54,7 +55,7 @@ def cr_uo2_fuel(j, num, temp, enrich):
     return fu
 
 def cr_uo2_gdo2(j, num, ring, temp, enrich, gdo2_pt):
-    uo2 = cr_uo2_fuel(j, num, temp, enrich)
+    uo2 = cr_uo2_fuel(j, ring, num, temp, enrich)
     gdo2 = openmc.Material(material_id = int(1E7 + (num + 1) * 1E5 + j*1E2 + ring), name = 'GdO2')
     gdo2.add_element('Gd', 2.0)
     gdo2.add_element('O', 3.0)
