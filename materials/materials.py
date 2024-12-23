@@ -11,10 +11,10 @@ import openmc.model
 from fuel_assemblies import fa_types, find_name
 
 sys.path.append('../')
-from constants import core_height, csv_path
+from constants import temp_path
 from constants import b_conc, dif_fu_cart
 from constants import numbers, fr_number, ring_number
-from constants import r_fr, delta_shell, l_shell, r_fuel, l_g, l_fuel, r_hole
+from constants import r_fuel, r_hole
 
 #materials ID definition
 #1??????? - first 1
@@ -92,7 +92,7 @@ def cr_shell_110(j, num):
     #shell_alloy.temperature = temp + 273.15
     shell_alloy.set_density('g/cm3',6.5)
     return shell_alloy
-file_path = 'burnup_temp.txt'
+file_path = temp_path + 'burnup_temp.txt'
 hc_density = []
 hc_temperature = []
 shell_temperature = []
@@ -115,14 +115,20 @@ fuel_uo2_arr = []
 grey_fuel_arr = []
 s_ring = pi * (r_fuel * r_fuel - r_hole * r_hole)/ring_number
 for i in range(0, len(dif_fu_cart)):
+    fuel_fa = []
+    grey_fuel_fa = []
     type = find_name(dif_fu_cart[i], fa_types)
     coolant = cr_water(i, 3, hc_temperature[i], hc_density[i], b_conc)
     coolant_arr.append(coolant)
     for j in range (0, fr_number - len(type["grey_pos"])):
         fuel_uo2 = cr_uo2_fuel(i, j, 5, fuel_temperature[i], type["enrichment"], ring_number + 1)
-        fuel_uo2_arr.append(fuel_uo2)
+        fuel_fa.append(fuel_uo2)
+    fuel_uo2_arr.append(fuel_fa)
     for j in range (0, len(type["grey_pos"])):
+        grey_rod = []
         for k in range(0, ring_number):
             grey_fuel = cr_uo2_gdo2(i, j, 6, k, fuel_temperature[i], type["grey_enrichment"], type["gdo2_wo"], s_ring)
-            grey_fuel_arr.append(grey_fuel)
+            grey_rod.append(grey_fuel)
+        grey_fuel_fa.append(grey_rod)
+    grey_fuel_arr.append(grey_fuel_fa)
 print("materials created!")

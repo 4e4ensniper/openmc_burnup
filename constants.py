@@ -17,7 +17,7 @@ ring_number = 10
 #The number of fuel assemblies per row, starting from the bottom of the core map.
 line = [4, 7, 10, 11, 12, 13, 12, 13, 12, 13, 12, 11, 10, 7, 4]
 #Path to the location of files with temperature distributions.
-csv_path = "/home/ubuntu24/Desktop/openmc_ap1000/materials/temperature_distributions/"
+temp_path = "/home/ubuntu24/Desktop/openmc_burnup/materials/"
 #csv_path = "/home/adminsrv/projects/EfanovKS/openmc_ap1000/materials/temperature_distributions/"
 #Calculation parameters
 batches = 200
@@ -45,4 +45,8 @@ half_numbers = [1, 2, 2, 1,
 r_half_numbers = list(reversed(half_numbers))
 half_numbers.append(len(dif_fu_cart))
 numbers = half_numbers + r_half_numbers
+
+cr_pos = [207, 213, 219, 225, 231, 237,
+          240, 245, 250, 255, 260, 265,
+          296, 299, 302, 305, 308, 311]
 
