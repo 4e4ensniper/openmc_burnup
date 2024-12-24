@@ -4,9 +4,6 @@ r_fuel = 7.57/20 #sm
 r_hole = 2.35/20 #sm
 r_fr = 9.1/20 #sm
 delta_shell = 0.69/10 #sm
-l_shell = 21.2 #W/m*K
-l_g  = 0.25 #W/m*K
-l_fuel = 2.9 #W/m*K
 fr_number = 312
 rod_pitch = 1.275 #sm
 turnkey_size = 23.4 #sm
@@ -22,7 +19,7 @@ temp_path = "/home/ubuntu24/Desktop/openmc_burnup/materials/"
 #Calculation parameters
 batches = 200
 inactive = 10
-particles = 100000
+particles = 50000
 #Number of different fuel assemblies defined as different universes
 dif_fu_cart = ['Z49A2']
 '''

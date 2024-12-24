@@ -1,8 +1,11 @@
 import openmc
+import openmc.deplete
 import math
 import sys
+
+
 sys.path.append('../')
-from constants import rod_pitch, turnkey_size, ring_number
+from constants import rod_pitch, turnkey_size, ring_number, batches, inactive, particles
 from constants import r_fuel, r_hole, r_fr, delta_shell, fr_number,cr_pos, dif_fu_cart
 
 sys.path.append('../materials/')
@@ -143,6 +146,10 @@ def fuel_assembly(i, shell, gaz, coolant, uo2_fa_arr, grey_fa_arr,
     return fa_un
 
 if __name__ == '__main__':
+
+
+    #chain_file = "/home/adminsrv/projects/sections/endfb-viii.0-hdf5/chain_casl_pwr.xml"
+    chain_file = "/home/ubuntu24/Desktop/libs/chain_endfb71_pwr.xml"
     number = 0
     fa = fuel_assembly(number, shell_110, gaz, coolant_arr[number], fuel_uo2_arr[number], grey_fuel_arr[number],
                        shell_temperature[number], gaz_gap_temperature[number], central_gaz_temperature[number],
@@ -167,3 +174,5 @@ if __name__ == '__main__':
     plots = openmc.Plots([p])
     plots.export_to_xml()
     openmc.plot_geometry()
+
+

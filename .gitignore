@@ -173,5 +173,7 @@ cython_debug/
 
 *.png
 *.xml
+*.h5
+*.out
 *.txt
 !materials/*.txt
