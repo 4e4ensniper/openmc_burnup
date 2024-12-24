@@ -13,7 +13,7 @@ turnkey_size = 23.4 #sm
 core_barrel_in_r = 339.72/2 #sm
 core_barrel_out_r = 349.88/2 #sm
 b_conc = 4 #g/kg
-ring_number = 10
+ring_number = 7
 #The number of fuel assemblies per row, starting from the bottom of the core map.
 line = [4, 7, 10, 11, 12, 13, 12, 13, 12, 13, 12, 11, 10, 7, 4]
 #Path to the location of files with temperature distributions.
@@ -24,6 +24,8 @@ batches = 200
 inactive = 10
 particles = 100000
 #Number of different fuel assemblies defined as different universes
+dif_fu_cart = ['Z49A2']
+'''
 dif_fu_cart = ['Z49A2', 'Z49A2',
                'Z40', 'Z24', 'Z33Z2', 'Z24',
                'Z24', 'Z33Z9', 'Z13',
@@ -32,6 +34,7 @@ dif_fu_cart = ['Z49A2', 'Z49A2',
                'Z33Z9', 'Z24',
                'Z13',
                'Z33Z9']
+'''
 #An array that contains the numbers of the various universes of fuel assemblies on the cartogram.
 half_numbers = [1, 2, 2, 1,
                 3, 4, 5, 6, 5, 4, 3,
@@ -48,5 +51,5 @@ numbers = half_numbers + r_half_numbers
 
 cr_pos = [207, 213, 219, 225, 231, 237,
           240, 245, 250, 255, 260, 265,
-          296, 299, 302, 305, 308, 311]
+          295, 298, 301, 304, 307, 310]
 
