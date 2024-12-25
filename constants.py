@@ -10,18 +10,20 @@ turnkey_size = 23.4 #sm
 core_barrel_in_r = 339.72/2 #sm
 core_barrel_out_r = 349.88/2 #sm
 b_conc = 4 #g/kg
-ring_number = 7
+ring_number = 2
+
+q_r = 3472.3869 * 1E6
 #The number of fuel assemblies per row, starting from the bottom of the core map.
 line = [4, 7, 10, 11, 12, 13, 12, 13, 12, 13, 12, 11, 10, 7, 4]
 #Path to the location of files with temperature distributions.
 temp_path = "/home/ubuntu24/Desktop/openmc_burnup/materials/"
 #csv_path = "/home/adminsrv/projects/EfanovKS/openmc_ap1000/materials/temperature_distributions/"
 #Calculation parameters
-batches = 200
+batches = 20
 inactive = 10
-particles = 50000
+particles = 500
 #Number of different fuel assemblies defined as different universes
-dif_fu_cart = ['Z49A2']
+dif_fu_cart = ['Z24']
 '''
 dif_fu_cart = ['Z49A2', 'Z49A2',
                'Z40', 'Z24', 'Z33Z2', 'Z24',
