@@ -104,7 +104,7 @@ fa_types = [
     {"name": "Z33Z9",
      "enrichment": 3.3,
      "grey_enrichment": 2.4,
-     "gdo2_wo": 8,
+     "gdo2_wo": 8.0,
      "grey_pos": [114, 118, 122, 130, 134, 138, 146, 150, 154]############
     },
     {"name": "Z49Y7",
@@ -121,6 +121,13 @@ fa_types = [
      "grey_enrichment": 3.6,
      "gdo2_wo": 8.0,
      "grey_pos": [114, 122, 130, 138, 146, 154, 271, 279, 287]
+    },
+    #average fuel assembly
+    {"name": "avg",
+     "enrichment": 2.8,
+     "grey_enrichment": 2.36,
+     "gdo2_wo": 6.5,
+     "grey_pos": [114, 122, 130, 138, 146, 154]
     }
 ]
 

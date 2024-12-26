@@ -19,11 +19,11 @@ line = [4, 7, 10, 11, 12, 13, 12, 13, 12, 13, 12, 11, 10, 7, 4]
 temp_path = "/home/ubuntu24/Desktop/openmc_burnup/materials/"
 #csv_path = "/home/adminsrv/projects/EfanovKS/openmc_ap1000/materials/temperature_distributions/"
 #Calculation parameters
-batches = 20
+batches = 300
 inactive = 10
-particles = 500
+particles = 150000
 #Number of different fuel assemblies defined as different universes
-dif_fu_cart = ['Z24']
+dif_fu_cart = ['avg']
 '''
 dif_fu_cart = ['Z49A2', 'Z49A2',
                'Z40', 'Z24', 'Z33Z2', 'Z24',
